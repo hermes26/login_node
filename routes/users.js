@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+//User model
+const User = require('../models/User');
+
 //LOGIN page
 router.get('/login', (req,res) => res.render('login.ejs'));
 
@@ -38,7 +41,8 @@ router.post('/register', (req, res) => {
         });
 
     }else{
-        res.send('pass');
+        //validation pass
+
     }
 });
 
