@@ -2,14 +2,17 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 //The flash is a special area of the session used for storing messages. Messages are written to the flash and cleared after being displayed to the user. The flash is typically used in combination with redirects, ensuring that the message is available to the next page that is to be rendered.
-
 // Have to use the flash msg because we are redirecting, so we are  storing it in the session
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
+//Passport Config
+require('./config/passport')(passport);
 
 //DB Config
 const db = require('./config/keys').MongoURI;
@@ -36,6 +39,12 @@ app.use(session({
   })
 );
 
+//Passport Middleware- must be after the session middleware
+// In a Connect or Express-based application, passport.initialize() middleware is required to initialize Passport. If your application uses persistent login sessions, passport.session() middleware must also be used.
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 //connect flash
 app.use(flash());
 
@@ -44,6 +53,7 @@ app.use((req, res, next) => {
     //to set global variables: res.locals.var_name
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
 

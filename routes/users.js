@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 //User model
 const User = require('../models/User');
@@ -88,6 +89,18 @@ router.post('/register', (req, res) => {
     }
 });
 
+
+//LOGIN Handle
+// Authenticating requests is as simple as calling passport.authenticate() and specifying which strategy to employ
+// Upon successful authentication, the user will be redirected to the home page. If authentication fails, the user will be redirected back to the login page for another attempt.
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/users/login',
+        failureFlash: true 
+    })(req, res, next);
+})
+// Setting the failureFlash option to true instructs Passport to flash an error message using the message given by the strategy's verify callback, if any(in passport.js). This is often the best approach, because the verify callback can make the most accurate determination of why authentication failed.
 
 
 module.exports = router;
