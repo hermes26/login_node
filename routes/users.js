@@ -103,4 +103,11 @@ router.post('/login', (req, res, next) => {
 // Setting the failureFlash option to true instructs Passport to flash an error message using the message given by the strategy's verify callback, if any(in passport.js). This is often the best approach, because the verify callback can make the most accurate determination of why authentication failed.
 
 
+//LOGOUT Handle
+router.get('/logout', (req,res)=> {
+    req.logout();//the passport middleware gives us the logout() method
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/users/login');
+})
+
 module.exports = router;
